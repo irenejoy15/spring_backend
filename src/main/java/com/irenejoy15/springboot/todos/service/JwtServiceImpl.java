@@ -1,5 +1,6 @@
 package com.irenejoy15.springboot.todos.service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.Map;
+import java.util.function.Function;
 
 
 // A.2 - Implement the JwtService interface in a class called JwtServiceImpl. For now, you can leave the method implementations empty or return default values.
@@ -26,7 +28,21 @@ public class JwtServiceImpl implements JwtService {
     // END A.3
     @Override
     public String extractUsername(String token) {
-        return null;
+        // C.3 - edit the return statement to call the extractClaim method, passing the token and a lambda function that retrieves the subject claim from the Claims object.
+        return extractClaim(token, Claims::getSubject);
+    }
+    // C.2 - Create a private method extractClaim that takes a JWT and a Function to extract a specific claim from the token. This method will be used by extractUsername to get the subject claim.
+    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
+    // C.1 - Implement the extractUsername method to parse the JWT and extract the username (subject) from the token claims.
+    private Claims extractAllClaims(String token) {
+        return Jwts.parser()
+            .verifyWith(getSigningKey())
+            .build()
+            .parseSignedClaims(token)
+            .getPayload();
     }
 
     @Override
