@@ -8,6 +8,7 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -18,6 +19,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 
 // 1st implement UserDetails interface to integrate with Spring Security
 // 3rd add @Entity and @Table annotations to map this class to a database table
@@ -55,7 +57,11 @@ public class User implements UserDetails {
     @CollectionTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id")) // Specify the name of the join table for user authorities
     private List<Authority> authorities; // One User have many Authorities/Roles
     //  END STEP A.1
-    // private List<Todo> todos; // One User have many Todos
+    
+    // STEP B.1 -Todos field to represent the user's todos (e.g., List<Todo> todos) and annotate it with @OneToMany to indicate that it's a one-to-many relationship with the Todo entity
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true) // Specify the mappedBy attribute to indicate the owning side of the relationship and cascade operations
+    private List<Todo> todos; // One User have many Todos
+    // END STEP B.1
     // Default constructor (required by JPA)
 
     public User() {}
