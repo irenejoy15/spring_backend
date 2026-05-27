@@ -55,7 +55,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     // D.1 - Implement the authenticate method in the AuthenticationServiceImpl class. This method will take an AuthenticationRequest as input, validate the user's credentials, and return an AuthenticationResponse if the authentication is successful. If the authentication fails, it should throw an appropriate exception.
     @Override
     @Transactional(readOnly = true)
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse login(AuthenticationRequest request) {
+        // D.4 - Use the authenticationManager to authenticate the user's credentials by creating a UsernamePasswordAuthenticationToken with the email and password from the AuthenticationRequest. If the authentication is successful, retrieve the user details from the database using the UserRepository and generate a JWT token using the JwtService. Finally, return an AuthenticationResponse containing the generated JWT token.
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 request.getEmail(),

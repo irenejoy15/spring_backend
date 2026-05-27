@@ -5,7 +5,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.irenejoy15.springboot.todos.request.AuthenticationRequest;
 import com.irenejoy15.springboot.todos.request.RegisterRequest;
+import com.irenejoy15.springboot.todos.response.AuthenticationResponse;
 import com.irenejoy15.springboot.todos.service.AuthenticationService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,5 +35,13 @@ public class AuthenticationController {
     @PostMapping("/register")
     public void register(@Valid @RequestBody RegisterRequest registerRequest) throws Exception {
         authenticationService.register(registerRequest);
+    }
+
+    // E.1 - Create a method named login in the AuthenticationController class that takes an AuthenticationRequest object as a parameter. This method will be responsible for handling user login requests. It should call the authenticate method of the AuthenticationService to perform the authentication logic and return an AuthenticationResponse containing the JWT token if the authentication is successful.
+    @Operation(summary = "Authenticate a user", description = "Endpoint for user authentication")
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/login")
+    public AuthenticationResponse login(@Valid @RequestBody AuthenticationRequest authRequest) throws Exception {
+        return authenticationService.login(authRequest);
     }
 }

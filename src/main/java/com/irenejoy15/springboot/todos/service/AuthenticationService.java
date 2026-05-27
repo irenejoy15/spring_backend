@@ -6,5 +6,5 @@ import com.irenejoy15.springboot.todos.response.AuthenticationResponse;
 
 public interface AuthenticationService {
     void register(RegisterRequest input) throws Exception;
-    AuthenticationResponse authenticate(AuthenticationRequest input) throws Exception;
+    AuthenticationResponse login(AuthenticationRequest input) throws Exception;
 }
