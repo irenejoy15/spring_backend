@@ -69,6 +69,7 @@ public class SecurityConfig {
             configurer
                 .requestMatchers("/api/auth/**","/swagger-ui/**","/v3/api-docs/**","/swagger-resources/**",
                     "/webjars/**","/docs").permitAll()
+                    // 4.1 - Update the securityFilterChain method to configure the HttpSecurity object to allow unauthenticated access to the /api/auth/** endpoints (for registration and login) and require authentication for all other endpoints. This can be done using the authorizeHttpRequests method and specifying the appropriate matchers and access rules.
                 .anyRequest().authenticated()
         );
 
