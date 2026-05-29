@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.irenejoy15.springboot.todos.entity.User;
+import com.irenejoy15.springboot.todos.response.UserResponse;
 import com.irenejoy15.springboot.todos.service.UserService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,7 +23,7 @@ public class UserController {
     }
 
     @GetMapping("/info")
-    public User getUserInfo(){
+    public UserResponse getUserInfo(){
         return userService.getUserInfo();
     }
 }

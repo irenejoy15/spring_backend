@@ -25,7 +25,7 @@ public class Authority implements GrantedAuthority{
     @Override
     public @Nullable String getAuthority() {
         // TODO Auto-generated method stub
-        return null;
+        return authority;
     }
    
     
