@@ -8,6 +8,8 @@ import com.irenejoy15.springboot.todos.response.UserResponse;
 import com.irenejoy15.springboot.todos.service.UserService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -25,5 +27,11 @@ public class UserController {
     @GetMapping("/info")
     public UserResponse getUserInfo(){
         return userService.getUserInfo();
+    }
+
+    // 6.4 - Add a new endpoint to the UserController class that allows users to delete their accounts. This endpoint should be mapped to a DELETE request and should call the deleteUser method of the UserService to perform the account deletion logic. Ensure that appropriate security measures are in place to prevent unauthorized access to this endpoint, such as requiring authentication and verifying that the user requesting the deletion is the owner of the account being deleted.  
+    @DeleteMapping("/delete")
+    public void deleteUser() {
+        userService.deleteUser();
     }
 }
