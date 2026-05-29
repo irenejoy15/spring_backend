@@ -63,4 +63,15 @@ public class UserServiceImpl implements UserService {
         }
         return false;
     }
+
+    @Override
+    public void deleteUserById(Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        if(isLastAdmin(user)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot delete the last admin user");
+        }
+        userRepository.delete(user);
+    }
 }
