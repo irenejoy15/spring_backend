@@ -10,6 +10,7 @@ import com.irenejoy15.springboot.todos.entity.Authority;
 import com.irenejoy15.springboot.todos.entity.User;
 import com.irenejoy15.springboot.todos.repository.UserRepository;
 import com.irenejoy15.springboot.todos.response.UserResponse;
+import com.irenejoy15.springboot.todos.util.FindAuthenticatedUser;
 
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,19 +18,16 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-
-    public UserServiceImpl(UserRepository userRepository) {
+    private final FindAuthenticatedUser findAuthenticatedUser;
+    public UserServiceImpl(UserRepository userRepository, FindAuthenticatedUser findAuthenticatedUser) {
         this.userRepository = userRepository;
+        this.findAuthenticatedUser = findAuthenticatedUser;
     }
 
     @Override
     @Transactional(readOnly = true)
     public UserResponse getUserInfo() {
-        Authentication authentication =  SecurityContextHolder.getContext().getAuthentication(); 
-        if(authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
-            throw new AccessDeniedException("User is not authenticated | Access Denied");
-        }
-        User user = (User) authentication.getPrincipal();
+        User user = findAuthenticatedUser.getAuthenticatedUser();
         return new UserResponse(
             user.getId(),
             user.getFirstName() +" "+ user.getLastName(),
@@ -40,11 +38,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser() {
-        Authentication authentication =  SecurityContextHolder.getContext().getAuthentication(); 
-        if(authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
-            throw new AccessDeniedException("User is not authenticated | Access Denied");
-        }
-        User user = (User) authentication.getPrincipal();
+        User user = findAuthenticatedUser.getAuthenticatedUser();
 
         if(isLastAdmin(user)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot delete the last admin user");
