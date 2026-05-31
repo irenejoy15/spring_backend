@@ -1,7 +1,9 @@
 package com.irenejoy15.springboot.todos.service;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.irenejoy15.springboot.todos.entity.Todo;
@@ -11,6 +13,7 @@ import com.irenejoy15.springboot.todos.request.TodoRequest;
 import com.irenejoy15.springboot.todos.response.TodoResponse;
 import com.irenejoy15.springboot.todos.util.FindAuthenticatedUser;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class TodoServiceImpl implements TodoService {
@@ -57,5 +60,31 @@ public class TodoServiceImpl implements TodoService {
             todo.getPriority(),
             todo.isComplete()
         );
+    }
+
+    @Override
+    public TodoResponse toggleTodoCompletion(Long id) {
+        User currentUser = findAuthenticatedUser.getAuthenticatedUser();
+        Optional<Todo> todo = todoRepository.findByIdAndOwner(id, currentUser);
+
+        if(todo.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Todo not found");
+        };
+
+        todo.get().setComplete(!todo.get().isComplete());
+        Todo updatedTodo = todoRepository.save(todo.get());
+        return convertToTodoResponse(updatedTodo);
+    }
+
+    @Transactional
+    public void deleteTodo(Long id) {
+        User currentUser = findAuthenticatedUser.getAuthenticatedUser();
+        Optional<Todo> todo = todoRepository.findByIdAndOwner(id, currentUser);
+
+        if(todo.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Todo not found");
+        };
+
+        todoRepository.delete(todo.get());        
     }
 }

@@ -8,4 +8,6 @@ import com.irenejoy15.springboot.todos.response.TodoResponse;
 public interface TodoService {
     List<TodoResponse> getAllTodos();
     TodoResponse createTodo(TodoRequest request);
+    TodoResponse toggleTodoCompletion(Long id);
+    void deleteTodo(Long id);
 }
